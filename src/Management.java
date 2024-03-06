@@ -30,5 +30,17 @@ public class Management
             noTarget.get(i).setTarget(unassigned.get(random));
             unassigned.remove(random);
         }
+
+        public static void printTargets()
+        {
+            for(int i = 0; i < Team.getAliveTeams().size(); i++)
+            {
+                System.out.print("Team: " + Team.getAliveTeams().get(i).getName());
+                System.out.println("(" + Team.getAliveTeams().get(i).getMembers()[0].getName() + ", " + Team.getAliveTeams().get(i).getMembers()[1] + ")");
+                System.out.print("Target: " + Team.getAliveTeams().get(i).getTarget().getName());
+                System.out.println("(" + Team.getAliveTeams().get(i).getTarget().getMembers()[0].getName() + ", " + Team.getAliveTeams().get(i).getTarget().getMembers()[1] + ")");
+                System.out.println();
+            }
+        }
     }
 }
