@@ -23,7 +23,12 @@ public class Management
         }
 
         // Loop through unassigned list, assign teams randomly with following procedure
-        // Choose a random index ahead of the current index by saying Math.random() * (array.size() - current index + 1)
         // Assign the random
+        for (int i = 0; i < noTarget.size(); i++)
+        {
+            int random = (int)(Math.random() * (unassigned.size()));
+            noTarget.get(i).setTarget(unassigned.get(random));
+            unassigned.remove(random);
+        }
     }
 }
