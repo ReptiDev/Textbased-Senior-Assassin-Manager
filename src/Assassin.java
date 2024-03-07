@@ -1,11 +1,8 @@
 import java.util.ArrayList;
+import java.io.Serializable;
 
-public class Assassin
+public class Assassin implements Serializable
 {
-    private static ArrayList<Assassin> playerList;
-    private static ArrayList<Assassin> alivePlayers;
-    private static ArrayList<Assassin> deadPlayers;
-
     private String name;
     private boolean isAlive;
     private int killCount;
@@ -18,23 +15,23 @@ public class Assassin
         this.name = name;
         this.team = team;
         this.isAlive = true;
-        playerList.add(this);
-        alivePlayers.add(this);
+        Management.playerList.add(this);
+        Management.alivePlayers.add(this);
     }
 
     public static ArrayList<Assassin> getPlayers()
     {
-        return playerList;
+        return Management.playerList;
     }
 
     public static ArrayList<Assassin> getAlive()
     {
-        return alivePlayers;
+        return Management.alivePlayers;
     }
 
     public static ArrayList<Assassin> getDead()
     {
-        return deadPlayers;
+        return Management.deadPlayers;
     }
 
     public String getName()
@@ -69,16 +66,16 @@ public class Assassin
         this.killCount++;
 
         // Remove person killed from corresponding lists of players, add to dead list
-        for (int i = 0; i < alivePlayers.size(); i++)
+        for (int i = 0; i < Management.alivePlayers.size(); i++)
         {
-            if(alivePlayers.get(i).equals(target))
+            if(Management.alivePlayers.get(i).equals(target))
             {
                 target.isAlive = false;
-                alivePlayers.remove(i);
+                Management.alivePlayers.remove(i);
                 break;
             }
         }
-        deadPlayers.add(target);
+        Management.deadPlayers.add(target);
 
         // Check if target's death causes their whole team to die
         // If it does, set them as dead, add/remove from respective lists, and assign the dead team's target to the team who killed them

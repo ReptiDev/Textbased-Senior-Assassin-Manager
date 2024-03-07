@@ -1,10 +1,10 @@
 import java.util.ArrayList;
+import java.io.Serializable;
 
-public class Team
+
+public class Team implements Serializable
 {
-    private static ArrayList<Team> teamList;
-    private static ArrayList<Team> aliveTeams;
-    private static ArrayList<Team> deadTeams;
+
 
     private String name;
     private Assassin p1;
@@ -13,28 +13,27 @@ public class Team
     private boolean isAlive;
     private Team targetTeam;
 
-    public Team(Assassin p1, Assassin p2)
+    public Team(String name)
     {
-        this.p1 = p1;
-        this.p2 = p2;
+        this.name = name;
         this.isAlive = true;
-        teamList.add(this);
-        aliveTeams.add(this);
+        Management.teamList.add(this);
+        Management.aliveTeams.add(this);
     }
 
     public static ArrayList<Team> getTeamList()
     {
-        return teamList;
+        return Management.teamList;
     }
 
     public static ArrayList<Team> getAliveTeams()
     {
-        return aliveTeams;
+        return Management.aliveTeams;
     }
 
     public static ArrayList<Team> getDeadTeams()
     {
-        return deadTeams;
+        return Management.deadTeams;
     }
 
     public String getName()
