@@ -26,7 +26,19 @@ public class FileIO {
 
     public static void uploadPlayers()
     {
-        System.out.println("WIP");
+        try {
+            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("data.tmp"));
+            for(int i = 0; i < Management.playerList.size(); i++)
+            {
+                out.writeObject(Management.playerList.get(i));
+            }
+        }
+        catch (Exception ex)
+        {
+            if (ex instanceof FileNotFoundException) {
+                System.out.println("File not found!");
+            }
+        }
     }
 }
 

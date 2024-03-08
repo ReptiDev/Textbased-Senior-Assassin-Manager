@@ -54,6 +54,11 @@ public class Assassin implements Serializable
         return killCount;
     }
 
+    public String toString()
+    {
+        return this.name + " : " + this.team.getName();
+    }
+
     public ArrayList<Assassin> getKillList()
     {
         return killList;
