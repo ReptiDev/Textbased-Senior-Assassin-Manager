@@ -7,8 +7,7 @@ public class Team implements Serializable
 
 
     private String name;
-    private Assassin p1;
-    private Assassin p2;
+    private Assassin[] members = new Assassin[Management.teamMax];
 
     private boolean isAlive;
     private Team targetTeam;
@@ -19,21 +18,6 @@ public class Team implements Serializable
         this.isAlive = true;
         Management.teamList.add(this);
         Management.aliveTeams.add(this);
-    }
-
-    public static ArrayList<Team> getTeamList()
-    {
-        return Management.teamList;
-    }
-
-    public static ArrayList<Team> getAliveTeams()
-    {
-        return Management.aliveTeams;
-    }
-
-    public static ArrayList<Team> getDeadTeams()
-    {
-        return Management.deadTeams;
     }
 
     public String getName()
@@ -66,14 +50,35 @@ public class Team implements Serializable
         this.isAlive = isAlive;
     }
 
+    public String toString()
+    {
+        return this.name;
+    }
+
     public Assassin[] getMembers()
     {
-        Assassin[] temp = {p1,p2};
-        return temp;
+        return members;
+    }
+
+    public void addMember(Assassin member)
+    {
+        boolean success = false;
+        for (int i = 0; i < members.length; i++)
+        {
+            if (members[i] == null)
+            {
+                members[i] = member;
+                success = true;
+            }
+        }
+        if (!success)
+        {
+            System.out.println("Could not add player to team, it is already full.");
+        }
     }
 
     public int getKillCount()
     {
-        return p1.getKillCount() + p2.getKillCount();
+        return -1;
     }
 }

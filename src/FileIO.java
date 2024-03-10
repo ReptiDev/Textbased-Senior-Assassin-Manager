@@ -32,6 +32,7 @@ public class FileIO {
             {
                 out.writeObject(Management.playerList.get(i));
             }
+            out.close();
         }
         catch (Exception ex)
         {
@@ -42,11 +43,6 @@ public class FileIO {
     }
 }
 
-    //public static void uploadPlayers() throws IOException {
-    //    ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("data.tmp"));
-    //   out.writeObject(new Assassin("Bob", new Team("The Cookers")));
-    //    out.writeObject(new Assassin("Tim", new Team("The Murderer")));
-    //    out.close();
-   // }
+
 
 

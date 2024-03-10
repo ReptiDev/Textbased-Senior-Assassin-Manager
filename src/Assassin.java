@@ -3,10 +3,11 @@ import java.io.Serializable;
 
 public class Assassin implements Serializable
 {
-    private String name;
+    private final String name;
+    private final Team team;
     private boolean isAlive;
+    private boolean inRound;
     private int killCount;
-    private Team team;
     private ArrayList<Assassin> killList;
 
 
@@ -15,23 +16,9 @@ public class Assassin implements Serializable
         this.name = name;
         this.team = team;
         this.isAlive = true;
+        this.team.addMember(this);
         Management.playerList.add(this);
         Management.alivePlayers.add(this);
-    }
-
-    public static ArrayList<Assassin> getPlayers()
-    {
-        return Management.playerList;
-    }
-
-    public static ArrayList<Assassin> getAlive()
-    {
-        return Management.alivePlayers;
-    }
-
-    public static ArrayList<Assassin> getDead()
-    {
-        return Management.deadPlayers;
     }
 
     public String getName()
@@ -56,7 +43,7 @@ public class Assassin implements Serializable
 
     public String toString()
     {
-        return this.name + " : " + this.team.getName();
+        return this.name + "(" + this.team.getName() + ")";
     }
 
     public ArrayList<Assassin> getKillList()
@@ -87,15 +74,15 @@ public class Assassin implements Serializable
         if (!target.team.getMembers()[0].isAlive() && !target.team.getMembers()[1].isAlive())
         {
             target.team.setAlive(false);
-            for (int i = 0; i < Team.getAliveTeams().size(); i++)
+            for (int i = 0; i < Management.aliveTeams.size(); i++)
             {
-                if(Team.getAliveTeams().get(i).equals(target.team))
+                if(Management.aliveTeams.get(i).equals(target.team))
                 {
-                    Team.getAliveTeams().remove(i);
+                    Management.aliveTeams.remove(i);
                     break;
                 }
             }
-            Team.getDeadTeams().add(target.team);
+            Management.deadTeams.add(target.team);
 
             Management.assignFromKill(this, target);
             System.out.println("This kill fully eliminated team " + target.team.getName() + ". This team's new target is: " + this.team.getTarget());
