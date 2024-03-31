@@ -6,9 +6,9 @@ public class Assassin implements Serializable
     private final String name;
     private final Team team;
     private boolean isAlive;
-    private boolean inRound;
-    private int killCount;
-    private ArrayList<Assassin> killList;
+    private int totalKills;
+    private int killsThisRound;
+    private ArrayList<Assassin> killList = new ArrayList<Assassin>();
 
 
     public Assassin(String name, Team team)
@@ -38,7 +38,17 @@ public class Assassin implements Serializable
 
     public int getKillCount()
     {
-        return killCount;
+        return totalKills;
+    }
+
+    public int getKillsThisRound()
+    {
+        return killsThisRound;
+    }
+
+    public void setKillsThisRound(int num)
+    {
+        killsThisRound = num;
     }
 
     public String toString()
@@ -51,41 +61,40 @@ public class Assassin implements Serializable
         return killList;
     }
 
+    public void eliminate()
+    {
+        this.isAlive = false;
+        Management.alivePlayers.remove(this);
+        Management.deadPlayers.add(this);
+    }
+
     public void kill(Assassin target)
     {
         // Update player stats with their kill
         this.killList.add(target);
-        this.killCount++;
+        this.totalKills++;
+        this.killsThisRound++;
 
         // Remove person killed from corresponding lists of players, add to dead list
         for (int i = 0; i < Management.alivePlayers.size(); i++)
         {
             if(Management.alivePlayers.get(i).equals(target))
             {
-                target.isAlive = false;
-                Management.alivePlayers.remove(i);
+                target.eliminate();
                 break;
             }
         }
-        Management.deadPlayers.add(target);
+
+        System.out.println(this.getName() + " has killed " + target.getName());
 
         // Check if target's death causes their whole team to die
         // If it does, set them as dead, add/remove from respective lists, and assign the dead team's target to the team who killed them
         if (!target.team.getMembers()[0].isAlive() && !target.team.getMembers()[1].isAlive())
         {
-            target.team.setAlive(false);
-            for (int i = 0; i < Management.aliveTeams.size(); i++)
-            {
-                if(Management.aliveTeams.get(i).equals(target.team))
-                {
-                    Management.aliveTeams.remove(i);
-                    break;
-                }
-            }
-            Management.deadTeams.add(target.team);
+            target.team.eliminate();
 
             Management.assignFromKill(this, target);
-            System.out.println("This kill fully eliminated team " + target.team.getName() + ". This team's new target is: " + this.team.getTarget());
+            System.out.println("This kill fully eliminated team " + target.team.getName() + ". \nThis team's new target is: " + this.team.getTargetName());
         }
         else
         {

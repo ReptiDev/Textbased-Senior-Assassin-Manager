@@ -4,9 +4,11 @@ import java.util.ArrayList;
 public class FileIO {
     static ArrayList<Assassin> playerData = new ArrayList<Assassin>();
 
+    // need to add another file where normal values are stored (right now just round number)
+
     public static void getPlayers() {
         try {
-            ObjectInputStream in = new ObjectInputStream(new FileInputStream("data.tmp"));
+            ObjectInputStream in = new ObjectInputStream(new FileInputStream("playerdata.tmp"));
             Object temp;
             while ((temp = in.readObject()) != null) {
                 playerData.add((Assassin) temp);
@@ -27,7 +29,7 @@ public class FileIO {
     public static void uploadPlayers()
     {
         try {
-            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("data.tmp"));
+            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("playerdata.tmp"));
             for(int i = 0; i < Management.playerList.size(); i++)
             {
                 out.writeObject(Management.playerList.get(i));

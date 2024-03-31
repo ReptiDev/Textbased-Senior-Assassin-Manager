@@ -30,6 +30,11 @@ public class Team implements Serializable
         this.name = name;
     }
 
+    public String getTargetName()
+    {
+        return targetTeam.getName() + "(" + targetTeam.members[0].getName() + ", " + targetTeam.members[1].getName() + ")";
+    }
+
     public Team getTarget()
     {
         return targetTeam;
@@ -45,14 +50,16 @@ public class Team implements Serializable
         return isAlive;
     }
 
-    public void setAlive(boolean isAlive)
+    public void eliminate()
     {
-        this.isAlive = isAlive;
+        this.isAlive = false;
+        Management.aliveTeams.remove(this);
+        Management.deadTeams.add(this);
     }
 
     public String toString()
     {
-        return this.name;
+        return this.name + "\n" + members[0].getName() + ": Alive = " + members[0].isAlive() + "\n" + members[1].getName() + ": Alive = " + members[1].isAlive() + "\n";
     }
 
     public Assassin[] getMembers()
@@ -69,16 +76,23 @@ public class Team implements Serializable
             {
                 members[i] = member;
                 success = true;
+                break;
             }
         }
+
         if (!success)
         {
             System.out.println("Could not add player to team, it is already full.");
         }
     }
 
-    public int getKillCount()
+    public int getTotalKills()
     {
-        return -1;
+        return members[0].getKillCount() + members[1].getKillCount();
+    }
+
+    public int getKillsThisRound()
+    {
+        return members[0].getKillsThisRound() + members[1].getKillsThisRound();
     }
 }
