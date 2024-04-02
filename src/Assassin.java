@@ -1,3 +1,4 @@
+import java.sql.Array;
 import java.util.ArrayList;
 import java.io.Serializable;
 
@@ -8,7 +9,7 @@ public class Assassin implements Serializable
     private boolean isAlive;
     private int totalKills;
     private int killsThisRound;
-    private ArrayList<Assassin> killList = new ArrayList<Assassin>();
+    private ArrayList<Assassin> killList;
 
 
     public Assassin(String name, Team team)
@@ -17,6 +18,7 @@ public class Assassin implements Serializable
         this.team = team;
         this.isAlive = true;
         this.team.addMember(this);
+        this.killList = new ArrayList<Assassin>();
         Management.playerList.add(this);
         Management.alivePlayers.add(this);
     }

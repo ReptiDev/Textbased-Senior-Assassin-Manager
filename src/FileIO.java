@@ -26,6 +26,38 @@ public class FileIO {
         }
     }
 
+    public static void initializePlayers()
+    {
+        Management.playerList.addAll(playerData);
+
+        // Populate different Management ArrayLists using playerData
+        for (int i = 0; i < Management.playerList.size(); i++)
+        {
+            Assassin player = Management.playerList.get(i);
+            Team team = Management.playerList.get(i).getTeam();
+
+            if (player.isAlive())
+            {
+                Management.alivePlayers.add(player);
+            }
+            if (!player.isAlive())
+            {
+                Management.deadPlayers.add(player);
+            }
+            if (!Management.teamList.contains(team))
+            {
+                Management.teamList.add(team);
+            }
+            if (team.isAlive() && !Management.aliveTeams.contains(team))
+            {
+                Management.aliveTeams.add(team);
+            }
+            if (!team.isAlive() && !Management.deadTeams.contains(team))
+            {
+                Management.deadTeams.add(team);
+            }
+        }
+    }
     public static void uploadPlayers()
     {
         try {
@@ -41,6 +73,34 @@ public class FileIO {
             if (ex instanceof FileNotFoundException) {
                 System.out.println("File not found!");
             }
+        }
+    }
+
+    // Line 1 = Round Number
+    public static void uploadData()
+    {
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter("gamedata.txt"));
+            writer.write("" + Management.round);
+            writer.close();
+        }
+        catch (IOException e)
+        {
+            System.out.println("Something fucked up uploading data.");
+        }
+
+    }
+
+    public static void getData()
+    {
+        try
+        {
+            BufferedReader reader = new BufferedReader(new FileReader("gamedata.txt"));
+            Management.round = Integer.parseInt(reader.readLine());
+        }
+        catch (IOException e)
+        {
+            System.out.println("Something messed up getting data.");
         }
     }
 }

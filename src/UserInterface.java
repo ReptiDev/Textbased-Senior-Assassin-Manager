@@ -13,7 +13,8 @@ public class UserInterface {
             System.out.println("(3) Round Control");
             System.out.println("(4) Show Stats");
             System.out.println("(5) Print Lists");
-            System.out.println("(6) Close Program");
+            System.out.println("(6) Import Data From History");
+            System.out.println("(7) Close Program");
 
             currentInput = scanner.nextInt();
             scanner.nextLine();
@@ -35,13 +36,77 @@ public class UserInterface {
                     printLists();
                     break;
                 case 6:
+                    dataFromHistory();
+                case 7:
                     System.exit(0);
             }
         }
     }
 
+    public static void dataFromHistory()
+    {
+        System.out.println("WIP");
+    }
+
     public static void stats() {
-        System.out.println("To do");
+        currentInput = 0;
+        while (true) {
+            System.out.println("(1) Get Player Kills");
+            System.out.println("(2) Get Team Kills");
+            System.out.println("(3) Top 10 Team Kills");
+            System.out.println("(4) Back");
+
+            currentInput = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (currentInput) {
+                case 1:
+                    getPlayerKills();
+                    break;
+                case 2:
+                    getTeamKills();
+                    break;
+                case 3:
+                    getTop10TeamKills();
+                    break;
+                case 4:
+                    menu();
+                    break;
+            }
+        }
+    }
+
+    public static void getPlayerKills()
+    {
+        System.out.println("Enter a player's name: ");
+        String playerName = scanner.nextLine();
+        for (Assassin player : Management.playerList)
+        {
+            if(player.getName().contains(playerName))
+            {
+                System.out.println("This player has " + player.getKillCount() + " kills. They have killed the following people:");
+                System.out.println(player.getKillList());
+            }
+        }
+    }
+
+    public static void getTeamKills()
+    {
+        System.out.println("Enter a team's name: ");
+        String teamName = scanner.nextLine();
+        for (Team team : Management.teamList)
+        {
+            if(team.getName().contains(teamName))
+            {
+                System.out.println("This team has " + team.getTotalKills() + " kills. They have killed the following people:");
+                System.out.println(team.getTeamKillList());
+            }
+        }
+    }
+
+    public static void getTop10TeamKills()
+    {
+        System.out.println("WIP");
     }
 
     public static void addTeam() {
@@ -163,11 +228,17 @@ public class UserInterface {
     {
         for(int i = 0; i < Management.aliveTeams.size(); i++)
         {
-            Team team = Management.aliveTeams.get(i);
-            System.out.print("Team: " + team.getName());
-            System.out.println("(" + team.getMembers()[0].getName() + ", " + team.getMembers()[1].getName() + ")");
-            System.out.print("Target: " + team.getTarget().getName());
-            System.out.println("(" + team.getTarget().getMembers()[0].getName() + ", " + team.getTarget().getMembers()[1].getName() + ")\n");
+            try {
+                Team team = Management.aliveTeams.get(i);
+                System.out.print("Team: " + team.getName());
+                System.out.println("(" + team.getMembers()[0].getName() + ", " + team.getMembers()[1].getName() + ")");
+                System.out.print("Target: " + team.getTarget().getName());
+                System.out.println("(" + team.getTarget().getMembers()[0].getName() + ", " + team.getTarget().getMembers()[1].getName() + ")\n");
+            }
+            catch (NullPointerException e)
+            {
+                System.out.println("Team doesn't have a target.");
+            }
         }
     }
 
@@ -185,9 +256,11 @@ public class UserInterface {
             switch (currentInput) {
                 case 1:
                     Management.startGame();
+                    menu();
                     break;
                 case 2:
                     Management.endRound();
+                    menu();
                     break;
                 case 3:
                     menu();

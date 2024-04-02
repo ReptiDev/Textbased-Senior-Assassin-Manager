@@ -5,42 +5,18 @@ public class Main {
         // Load player data from local file upon program start
         System.out.println("Loading Player Data...");
         FileIO.getPlayers();
-        Management.playerList.addAll(FileIO.playerData);
-
-        // Populate different Management ArrayLists using playerData
-        for (int i = 0; i < Management.playerList.size(); i++)
-        {
-            Assassin player = Management.playerList.get(i);
-            Team team = Management.playerList.get(i).getTeam();
-
-            if (player.isAlive())
-            {
-                Management.alivePlayers.add(player);
-            }
-            if (!player.isAlive())
-            {
-                Management.deadPlayers.add(player);
-            }
-            if (!Management.teamList.contains(team))
-            {
-                Management.teamList.add(team);
-            }
-            if (team.isAlive() && !Management.aliveTeams.contains(team))
-            {
-                Management.aliveTeams.add(team);
-            }
-            if (!team.isAlive() && !Management.deadTeams.contains(team))
-            {
-                Management.deadTeams.add(team);
-            }
-        }
+        FileIO.initializePlayers();
+        FileIO.getData();
 
         // Create a shutdown hook, preventing loss of data by accident
         Runtime.getRuntime().addShutdownHook(new Thread(){
             public void run(){
                 System.out.println("Uploading data...");
                 FileIO.uploadPlayers();
-                System.out.println("Data uploaded, program closing.");
+                System.out.println("Players uploaded.");
+                FileIO.uploadData();
+                System.out.println("Game data uploaded.");
+                System.out.println("Uploading complete, program closing.");
             }
         });
 

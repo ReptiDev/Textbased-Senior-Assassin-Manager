@@ -8,8 +8,8 @@ public class Management
     public static ArrayList<Assassin> alivePlayers = new ArrayList<Assassin>();
     public static ArrayList<Assassin> deadPlayers = new ArrayList<Assassin>();
     public static ArrayList<Team> teamList = new ArrayList<Team>();
-    public static ArrayList<Team> aliveTeams = new ArrayList<Team>();;
-    public static ArrayList<Team> deadTeams = new ArrayList<Team>();;
+    public static ArrayList<Team> aliveTeams = new ArrayList<Team>();
+    public static ArrayList<Team> deadTeams = new ArrayList<Team>();
 
     public static void assignFromKill(Assassin player, Assassin target)
     {
@@ -64,15 +64,20 @@ public class Management
             Assassin member1 = team.getMembers()[0];
             Assassin member2 = team.getMembers()[1];
 
+            System.out.println("Currently inspecting team " + team);
+
             if (team.getKillsThisRound() == 0)
             {
                 team.eliminate();
                 member1.eliminate();
                 member2.eliminate();
+                i--;
+            }
+            else {
+                member1.setKillsThisRound(0);
+                member2.setKillsThisRound(0);
             }
 
-            member1.setKillsThisRound(0);
-            member2.setKillsThisRound(0);
         }
 
         randomAssignment();
