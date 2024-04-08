@@ -77,7 +77,8 @@ public class FileIO {
     }
 
     // Line 1 = Round Number
-    public static void uploadData()
+    // Line 2 = Game Over (true/false)
+    public static void uploadGameData()
     {
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter("gamedata.txt"));
@@ -91,7 +92,7 @@ public class FileIO {
 
     }
 
-    public static void getData()
+    public static void getGameData()
     {
         try
         {
@@ -101,6 +102,40 @@ public class FileIO {
         catch (IOException e)
         {
             System.out.println("Something messed up getting data.");
+        }
+    }
+
+    public static void uploadLog()
+    {
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter("gamelog.txt"));
+            for (String event : LogHandler.log)
+            {
+                writer.write(event + "\n");
+            }
+            writer.close();
+        }
+        catch (IOException e)
+        {
+            System.out.println("Log couldn't be uploaded.");
+        }
+    }
+
+    public static void getLog()
+    {
+        try
+        {
+            BufferedReader reader = new BufferedReader(new FileReader("gamelog.txt"));
+            String logLine = reader.readLine();
+            while(logLine != null) {
+                LogHandler.log.add(logLine);
+                logLine = reader.readLine();
+            }
+            reader.close();
+        }
+        catch (IOException e)
+        {
+            System.out.println("Log couldn't be retrieved.");
         }
     }
 }

@@ -16,6 +16,8 @@ public class Team implements Serializable {
         this.isAlive = true;
         Management.teamList.add(this);
         Management.aliveTeams.add(this);
+        String message = "Team " + name + " has been created.";
+        LogHandler.addLog(message);
     }
 
     public String getName() {
@@ -46,6 +48,9 @@ public class Team implements Serializable {
         this.isAlive = false;
         Management.aliveTeams.remove(this);
         Management.deadTeams.add(this);
+
+        String message = "Team " + this.getName() + " has been eliminated";
+        LogHandler.addLog(message);
     }
 
     public String toString() {

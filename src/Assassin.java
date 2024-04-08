@@ -21,6 +21,9 @@ public class Assassin implements Serializable
         this.killList = new ArrayList<Assassin>();
         Management.playerList.add(this);
         Management.alivePlayers.add(this);
+
+        String message = "Player " + name + " has been created and added to team " + team.getName();
+        LogHandler.addLog(message);
     }
 
     public String getName()
@@ -68,14 +71,21 @@ public class Assassin implements Serializable
         this.isAlive = false;
         Management.alivePlayers.remove(this);
         Management.deadPlayers.add(this);
+
+        String message = "Player " + this.getName() + " has been eliminated";
+        LogHandler.addLog(message);
     }
 
     public void kill(Assassin target)
     {
+        String message;
         // Update player stats with their kill
         this.killList.add(target);
         this.totalKills++;
         this.killsThisRound++;
+
+        message = this.getName() + " has killed " + target.getName();
+        System.out.println(message);
 
         // Remove person killed from corresponding lists of players, add to dead list
         for (int i = 0; i < Management.alivePlayers.size(); i++)
@@ -87,8 +97,6 @@ public class Assassin implements Serializable
             }
         }
 
-        System.out.println(this.getName() + " has killed " + target.getName());
-
         // Check if target's death causes their whole team to die
         // If it does, set them as dead, add/remove from respective lists, and assign the dead team's target to the team who killed them
         if (!target.team.getMembers()[0].isAlive() && !target.team.getMembers()[1].isAlive())
@@ -97,6 +105,7 @@ public class Assassin implements Serializable
 
             Management.assignFromKill(this, target);
             System.out.println("This kill fully eliminated team " + target.team.getName() + ". \nThis team's new target is: " + this.team.getTargetName());
+
         }
         else
         {

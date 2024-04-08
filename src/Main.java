@@ -6,17 +6,23 @@ public class Main {
         System.out.println("Loading Player Data...");
         FileIO.getPlayers();
         FileIO.initializePlayers();
-        FileIO.getData();
+        FileIO.getGameData();
+        FileIO.getLog();
 
         // Create a shutdown hook, preventing loss of data by accident
         Runtime.getRuntime().addShutdownHook(new Thread(){
             public void run(){
-                System.out.println("Uploading data...");
+                System.out.println("Uploading Player Data.");
                 FileIO.uploadPlayers();
-                System.out.println("Players uploaded.");
-                FileIO.uploadData();
+                System.out.println("Player Data uploaded.");
+                System.out.println("Uploading Game Data.");
+                FileIO.uploadGameData();
                 System.out.println("Game data uploaded.");
-                System.out.println("Uploading complete, program closing.");
+                System.out.println("Uploading Log.");
+                FileIO.uploadLog();
+                System.out.println("Log Uploaded.");
+                System.out.println();
+                System.out.println("All Data Saved, program closing.");
             }
         });
 
@@ -24,8 +30,6 @@ public class Main {
         UserInterface UI = new UserInterface();
 
         UI.menu();
-
-
     }
 
     private static void testCase()

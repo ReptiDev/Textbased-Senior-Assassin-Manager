@@ -10,9 +10,9 @@ public class UserInterface {
             System.out.println("Senior Assassin | Current Round: " + Management.round);
             System.out.println("(1) Add Team");
             System.out.println("(2) Log Kill");
-            System.out.println("(3) Round Control");
-            System.out.println("(4) Show Stats");
-            System.out.println("(5) Print Lists");
+            System.out.println("(3) Game Management");
+            System.out.println("(4) Stats");
+            System.out.println("(5) Lists");
             System.out.println("(6) Import Data From History");
             System.out.println("(7) Close Program");
 
@@ -21,6 +21,7 @@ public class UserInterface {
 
             switch (currentInput) {
                 case 1:
+                    System.out.println("Press enter to stop adding teams at any time");
                     addTeam();
                     break;
                 case 2:
@@ -110,22 +111,45 @@ public class UserInterface {
     }
 
     public static void addTeam() {
+        String input;
         String teamName;
         String memberOneName;
         String memberTwoName;
+        int count = 0;
 
-        System.out.println("Enter the Team Name:");
-        teamName = scanner.nextLine();
+        while (true)
+        {
+            System.out.println("Enter the Team Name:");
+            input = scanner.nextLine();
+            if (input.equals(""))
+            {
+                break;
+            }
+            teamName = input;
 
-        System.out.println("Enter the first member:");
-        memberOneName = scanner.nextLine();
-        System.out.println("Enter the second member:");
-        memberTwoName = scanner.nextLine();
+            System.out.println("Enter the first member:");
+            input = scanner.nextLine();
+            if (input.equals(""))
+            {
+                break;
+            }
+            memberOneName = input;
 
-        Team team = new Team(teamName);
-        new Assassin(memberOneName, team);
-        new Assassin(memberTwoName, team);
+            System.out.println("Enter the second member:");
+            input = scanner.nextLine();
+            if (input.equals(""))
+            {
+                break;
+            }
+            memberTwoName = input;
 
+            Team team = new Team(teamName);
+            new Assassin(memberOneName, team);
+            new Assassin(memberTwoName, team);
+            count++;
+        }
+
+        System.out.println("Made " + count + " new teams");
         menu();
     }
 

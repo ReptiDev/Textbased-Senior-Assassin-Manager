@@ -10,6 +10,7 @@ public class Management
     public static ArrayList<Team> teamList = new ArrayList<Team>();
     public static ArrayList<Team> aliveTeams = new ArrayList<Team>();
     public static ArrayList<Team> deadTeams = new ArrayList<Team>();
+    public static Team winner = null;
 
     public static void assignFromKill(Assassin player, Assassin target)
     {
@@ -57,6 +58,7 @@ public class Management
         // Loop through all teams and checks if they got a kill this round
         // If they did, they move through to the next
         // If not, both members are eliminated and the team is out
+        String message;
 
         for (int i = 0; i < aliveTeams.size(); i++)
         {
@@ -72,15 +74,35 @@ public class Management
                 member1.eliminate();
                 member2.eliminate();
                 i--;
+                message = "Team " + team.getName() + "was eliminated due to not getting a kill in Round " + round;
+                LogHandler.addLog(message);
             }
             else {
                 member1.setKillsThisRound(0);
                 member2.setKillsThisRound(0);
             }
-
         }
 
         randomAssignment();
         round++;
+        message = "Round " + round + " has begun";
+        LogHandler.addLog(message);
+
+        if(checkWin())
+        {
+            System.out.println("Team " + winner.getName() + " has won Assassins.");
+        }
+
     }
+
+    private static boolean checkWin()
+    {
+        if (aliveTeams.size() == 1)
+        {
+            winner = aliveTeams.get(0);
+            return true;
+        }
+        return false;
+    }
+
 }
