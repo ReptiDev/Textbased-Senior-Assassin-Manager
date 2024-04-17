@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class UserInterface {
@@ -54,7 +55,7 @@ public class UserInterface {
         while (true) {
             System.out.println("(1) Get Player Kills");
             System.out.println("(2) Get Team Kills");
-            System.out.println("(3) Top 10 Team Kills");
+            System.out.println("(3) Most Kills");
             System.out.println("(4) Back");
 
             currentInput = scanner.nextInt();
@@ -68,7 +69,7 @@ public class UserInterface {
                     getTeamKills();
                     break;
                 case 3:
-                    getTop10TeamKills();
+                    mostKills();
                     break;
                 case 4:
                     menu();
@@ -105,9 +106,30 @@ public class UserInterface {
         }
     }
 
-    public static void getTop10TeamKills()
+    public static void mostKills()
     {
-        System.out.println("WIP");
+        ArrayList<Team> most = new ArrayList<Team>();
+        most.add(Management.teamList.get(0)) ;
+
+        for(int i = 1; i < Management.teamList.size(); i++)
+        {
+            Team currentTeam = Management.teamList.get(i);
+            if(currentTeam.getTotalKills() > most.get(0).getTotalKills())
+            {
+                most.clear();
+                most.add(currentTeam);
+            }
+            else if(currentTeam.getTotalKills() == most.get(0).getTotalKills())
+            {
+                most.add(currentTeam);
+            }
+        }
+
+        System.out.println("The following teams have the most kills with " + most.get(0).getTotalKills() + " kills.");
+        for(int i = 0; i < most.size(); i++)
+        {
+            System.out.println(most.get(i).getName() +"\n");
+        }
     }
 
     public static void addTeam() {

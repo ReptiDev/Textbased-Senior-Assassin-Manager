@@ -1,4 +1,6 @@
 import java.io.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class FileIO {
@@ -61,12 +63,12 @@ public class FileIO {
     public static void uploadPlayers()
     {
         try {
-            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("playerdata.tmp"));
+            ObjectOutputStream mainOut = new ObjectOutputStream(new FileOutputStream("playerdata.tmp"));
             for(int i = 0; i < Management.playerList.size(); i++)
             {
-                out.writeObject(Management.playerList.get(i));
+                mainOut.writeObject(Management.playerList.get(i));
             }
-            out.close();
+            mainOut.close();
         }
         catch (Exception ex)
         {
@@ -74,6 +76,27 @@ public class FileIO {
                 System.out.println("File not found!");
             }
         }
+    }
+
+    public static void uploadHistory()
+    {
+        LocalDateTime dateTime = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-YY HH.MM");
+        String formattedDateTime = dateTime.format(formatter);
+
+        try{
+            ObjectOutputStream historyOut = new ObjectOutputStream(new FileOutputStream("history/" + formattedDateTime + ".tmp"));
+            for(int i = 0; i < Management.playerList.size(); i++)
+            {
+                historyOut.writeObject(Management.playerList.get(i));
+            }
+            historyOut.close();
+        }
+        catch (Exception ex)
+        {
+            System.out.println("oops something went wrong");
+        }
+
     }
 
     // Line 1 = Round Number
