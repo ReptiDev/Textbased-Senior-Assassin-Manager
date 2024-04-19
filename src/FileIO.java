@@ -81,11 +81,12 @@ public class FileIO {
     public static void uploadHistory()
     {
         LocalDateTime dateTime = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-YY HH.MM");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-YY HH.mm");
         String formattedDateTime = dateTime.format(formatter);
 
+        System.out.println(formattedDateTime);
         try{
-            ObjectOutputStream historyOut = new ObjectOutputStream(new FileOutputStream("history/" + formattedDateTime + ".tmp"));
+            ObjectOutputStream historyOut = new ObjectOutputStream(new FileOutputStream(  "history/" + formattedDateTime + ".tmp"));
             for(int i = 0; i < Management.playerList.size(); i++)
             {
                 historyOut.writeObject(Management.playerList.get(i));
@@ -96,9 +97,33 @@ public class FileIO {
         {
             System.out.println("oops something went wrong");
         }
-
     }
 
+    public static void loadFromHistory(String history)
+    {
+        playerData.clear();
+        Management.clearLists();
+
+        try {
+            ObjectInputStream in = new ObjectInputStream(new FileInputStream("history/" + history));
+            Object temp;
+            while ((temp = in.readObject()) != null) {
+                playerData.add((Assassin) temp);
+            }
+            in.close();
+        }
+        catch (Exception ex)
+        {
+            if (ex instanceof EOFException) {
+                System.out.println("End of file. Player history loaded.");
+                System.out.println("# Players Found: " + playerData.size() + "\n");
+            } else if (ex instanceof FileNotFoundException) {
+                System.out.println("No history exists with that name.");
+            }
+        }
+
+        initializePlayers();
+    }
     // Line 1 = Round Number
     // Line 2 = Game Over (true/false)
     public static void uploadGameData()

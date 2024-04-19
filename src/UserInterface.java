@@ -1,3 +1,4 @@
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -39,6 +40,7 @@ public class UserInterface {
                     break;
                 case 6:
                     dataFromHistory();
+                    break;
                 case 7:
                     System.exit(0);
             }
@@ -47,7 +49,25 @@ public class UserInterface {
 
     public static void dataFromHistory()
     {
-        System.out.println("WIP");
+        System.out.println("Saved Histories:");
+
+        File[] files = new File("history/").listFiles();
+        for(int i = 0; i < files.length; i++)
+        {
+            System.out.println("(" + (i+1) + ")" + files[i].getName());
+        }
+
+        System.out.println("Enter the number of the history you would like to load from.");
+        int num = scanner.nextInt();
+        scanner.nextLine();
+        System.out.println("You want to load from the file: " + files[num-1]);
+        System.out.println("Are you sure? (Y/N)");
+        String input = scanner.nextLine();
+        if (input.equals("Y"))
+        {
+            FileIO.loadFromHistory(files[num-1].getName());
+            LogHandler.addLog("A past history has been loaded. Some of the above events may not be accurate.");
+        }
     }
 
     public static void stats() {

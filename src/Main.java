@@ -15,7 +15,9 @@ public class Main {
                 System.out.println("Uploading Player Data.");
                 FileIO.uploadPlayers();
                 System.out.println("Player Data uploaded.");
+                System.out.println("Uploading History");
                 FileIO.uploadHistory();
+                System.out.println("History Uploaded");
                 System.out.println("Uploading Game Data.");
                 FileIO.uploadGameData();
                 System.out.println("Game data uploaded.");

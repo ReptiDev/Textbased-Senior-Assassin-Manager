@@ -16,9 +16,22 @@ public class Management
     {
         player.getTeam().setTarget(target.getTeam().getTarget());
         target.getTeam().setTarget(null);
+
+        if(checkWin())
+        {
+            System.out.println("Team " + winner.getName() + " has won Assassins.");
+        }
     }
 
-
+    public static void clearLists()
+    {
+        playerList.clear();
+        alivePlayers.clear();
+        deadPlayers.clear();
+        teamList.clear();
+        aliveTeams.clear();
+        deadTeams.clear();
+    }
     public static void randomAssignment()
     {
         ArrayList<Team> unassigned = new ArrayList<Team>();
@@ -92,7 +105,6 @@ public class Management
         {
             System.out.println("Team " + winner.getName() + " has won Assassins.");
         }
-
     }
 
     private static boolean checkWin()
