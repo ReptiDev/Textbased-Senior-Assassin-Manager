@@ -99,13 +99,14 @@ public class FileIO {
         }
     }
 
-    public static void loadFromHistory(String history)
+    public static void loadFromHistory(File history)
     {
+        System.out.println(history);
         playerData.clear();
         Management.clearLists();
 
         try {
-            ObjectInputStream in = new ObjectInputStream(new FileInputStream("history/" + history));
+            ObjectInputStream in = new ObjectInputStream(new FileInputStream(history));
             Object temp;
             while ((temp = in.readObject()) != null) {
                 playerData.add((Assassin) temp);
@@ -121,9 +122,9 @@ public class FileIO {
                 System.out.println("No history exists with that name.");
             }
         }
-
         initializePlayers();
     }
+
     // Line 1 = Round Number
     // Line 2 = Game Over (true/false)
     public static void uploadGameData()

@@ -9,11 +9,13 @@ public class Team implements Serializable {
     private Assassin[] members = new Assassin[Management.teamMax];
 
     private boolean isAlive;
+    private boolean isImmune;
     private Team targetTeam;
 
     public Team(String name) {
         this.name = name;
         this.isAlive = true;
+        this.isImmune = false;
         Management.teamList.add(this);
         Management.aliveTeams.add(this);
         String message = "Team " + name + " has been created.";
@@ -23,6 +25,18 @@ public class Team implements Serializable {
     public String getName() {
         return name;
     }
+
+
+    public void setImmune(boolean bool)
+    {
+        isImmune = bool;
+    }
+
+    public boolean getImmune()
+    {
+        return isImmune;
+    }
+
 
     public void setName(String name) {
         this.name = name;
@@ -83,7 +97,6 @@ public class Team implements Serializable {
     public int getKillsThisRound() {
         return members[0].getKillsThisRound() + members[1].getKillsThisRound();
     }
-
 
     public ArrayList<Assassin> getTeamKillList() {
         ArrayList<Assassin> teamKills = new ArrayList<Assassin>();

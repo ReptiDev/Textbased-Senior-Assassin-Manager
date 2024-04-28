@@ -34,12 +34,4 @@ public class Main {
 
         UI.menu();
     }
-
-    private static void testCase()
-    {
-        for (int i = 0; i < 5; i++)
-        {
-            new Assassin("" + i, new Team("Team " + i));
-        }
-    }
 }

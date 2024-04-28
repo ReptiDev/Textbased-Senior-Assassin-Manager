@@ -81,16 +81,28 @@ public class Management
 
             System.out.println("Currently inspecting team " + team);
 
+
+            if(team.getImmune())
+            {
+                message = "Team " + team.getName() + " is immune from elimination this round.";
+                LogHandler.addLog(message);
+                team.setImmune(false);
+                member1.setKillsThisRound(0);
+                member2.setKillsThisRound(0);
+            }
+
             if (team.getKillsThisRound() == 0)
             {
                 team.eliminate();
                 member1.eliminate();
                 member2.eliminate();
                 i--;
-                message = "Team " + team.getName() + "was eliminated due to not getting a kill in Round " + round;
+                message = "Team " + team.getName() + " was eliminated due to not getting a kill in Round " + round;
                 LogHandler.addLog(message);
             }
             else {
+                message = "Team " + team.getName() + " successfully moves forward to the next round.";
+                LogHandler.addLog(message);
                 member1.setKillsThisRound(0);
                 member2.setKillsThisRound(0);
             }

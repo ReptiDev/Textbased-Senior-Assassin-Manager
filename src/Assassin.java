@@ -68,12 +68,34 @@ public class Assassin implements Serializable
 
     public void eliminate()
     {
-        this.isAlive = false;
-        Management.alivePlayers.remove(this);
-        Management.deadPlayers.add(this);
+        if (this.isAlive)
+        {
+            this.isAlive = false;
+            Management.alivePlayers.remove(this);
+            Management.deadPlayers.add(this);
+        }
+        else
+        {
+            System.out.println("Player is already dead.");
+        }
+    }
 
-        String message = "Player " + this.getName() + " has been eliminated";
-        LogHandler.addLog(message);
+    public void revive()
+    {
+        if(!this.isAlive)
+        {
+            this.isAlive = true;
+            Management.deadPlayers.remove(this);
+            Management.alivePlayers.add(this);
+
+            String message = "Player " + this.getName() + " has been revived.";
+            System.out.println(message);
+            LogHandler.addLog(message);
+        }
+        else
+        {
+            System.out.println("Player is already alive");
+        }
     }
 
     public void kill(Assassin target)
@@ -111,7 +133,5 @@ public class Assassin implements Serializable
         {
             System.out.println("A player on the other team is still alive. Inform the group their target has not changed.");
         }
-
-
     }
 }

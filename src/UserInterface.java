@@ -4,30 +4,29 @@ import java.util.Scanner;
 
 public class UserInterface {
     public static Scanner scanner = new Scanner(System.in);
-    public static int currentInput = 0;
+    public static int menuChoice = 0;
 
     public static void menu() {
-        currentInput = 0;
+        menuChoice = 0;
         while (true) {
             System.out.println("Senior Assassin | Current Round: " + Management.round);
-            System.out.println("(1) Add Team");
-            System.out.println("(2) Log Kill");
-            System.out.println("(3) Game Management");
+            System.out.println("(1) Team Manager");
+            System.out.println("(2) Player Manager");
+            System.out.println("(3) Game Manager");
             System.out.println("(4) Stats");
             System.out.println("(5) Lists");
             System.out.println("(6) Import Data From History");
             System.out.println("(7) Close Program");
 
-            currentInput = scanner.nextInt();
+            menuChoice = scanner.nextInt();
             scanner.nextLine();
 
-            switch (currentInput) {
+            switch (menuChoice) {
                 case 1:
-                    System.out.println("Press enter to stop adding teams at any time");
-                    addTeam();
+                    teamManager();
                     break;
                 case 2:
-                    logKill();
+                    playerManager();
                     break;
                 case 3:
                     roundControl();
@@ -65,23 +64,23 @@ public class UserInterface {
         String input = scanner.nextLine();
         if (input.equals("Y"))
         {
-            FileIO.loadFromHistory(files[num-1].getName());
+            FileIO.loadFromHistory(files[num-1]);
             LogHandler.addLog("A past history has been loaded. Some of the above events may not be accurate.");
         }
     }
 
     public static void stats() {
-        currentInput = 0;
+        menuChoice = 0;
         while (true) {
             System.out.println("(1) Get Player Kills");
             System.out.println("(2) Get Team Kills");
             System.out.println("(3) Most Kills");
             System.out.println("(4) Back");
 
-            currentInput = scanner.nextInt();
+            menuChoice = scanner.nextInt();
             scanner.nextLine();
 
-            switch (currentInput) {
+            switch (menuChoice) {
                 case 1:
                     getPlayerKills();
                     break;
@@ -104,7 +103,7 @@ public class UserInterface {
         String playerName = scanner.nextLine();
         for (Assassin player : Management.playerList)
         {
-            if(player.getName().contains(playerName))
+            if(player.getName().toLowerCase().contains(playerName.toLowerCase()))
             {
                 System.out.println("This player has " + player.getKillCount() + " kills. They have killed the following people:");
                 System.out.println(player.getKillList());
@@ -118,7 +117,7 @@ public class UserInterface {
         String teamName = scanner.nextLine();
         for (Team team : Management.teamList)
         {
-            if(team.getName().contains(teamName))
+            if(team.getName().toLowerCase().contains(teamName.toLowerCase()))
             {
                 System.out.println("This team has " + team.getTotalKills() + " kills. They have killed the following people:");
                 System.out.println(team.getTeamKillList());
@@ -148,10 +147,39 @@ public class UserInterface {
         System.out.println("The following teams have the most kills with " + most.get(0).getTotalKills() + " kills.");
         for(int i = 0; i < most.size(); i++)
         {
-            System.out.println(most.get(i).getName() +"\n");
+            System.out.println(most.get(i).getName() + "(" + most.get(i).getMembers()[0].getName() + " " + most.get(i).getMembers()[1].getName() + ")");
+
         }
     }
 
+    public static void teamManager() {
+        menuChoice = 0;
+        while (true) {
+            System.out.println("(1) Edit Team");
+            System.out.println("(2) Add Team");
+            System.out.println("(3) Delete Team");
+            System.out.println("(4) Back");
+
+            menuChoice = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (menuChoice) {
+                case 1:
+                    editTeam();
+                    break;
+                case 2:
+                    System.out.println("Press enter to stop adding teams at any time");
+                    addTeam();
+                    break;
+                case 3:
+                    deleteTeam();
+                    break;
+                case 4:
+                    menu();
+                    break;
+            }
+        }
+    }
     public static void addTeam() {
         String input;
         String teamName;
@@ -167,7 +195,7 @@ public class UserInterface {
             {
                 break;
             }
-            teamName = input;
+            teamName = input.strip();
 
             System.out.println("Enter the first member:");
             input = scanner.nextLine();
@@ -175,7 +203,7 @@ public class UserInterface {
             {
                 break;
             }
-            memberOneName = input;
+            memberOneName = input.strip();
 
             System.out.println("Enter the second member:");
             input = scanner.nextLine();
@@ -183,7 +211,7 @@ public class UserInterface {
             {
                 break;
             }
-            memberTwoName = input;
+            memberTwoName = input.strip();
 
             Team team = new Team(teamName);
             new Assassin(memberOneName, team);
@@ -195,16 +223,166 @@ public class UserInterface {
         menu();
     }
 
+    public static void deleteTeam()
+    {
+        String input;
+        String teamName;
+
+        System.out.println("Enter the Team Name:");
+        input = scanner.nextLine();
+        if (input.equals(""))
+        {
+            return;
+        }
+        teamName = input;
+
+        for(int i = 0; i < Management.teamList.size(); i++)
+        {
+            Team team = Management.teamList.get(i);
+            if (team.getName().equals(teamName))
+            {
+                System.out.println("Team with that name found. Are you sure you want to delete them? (y/n)");
+                input = scanner.nextLine();
+                if (input.equals("y"))
+                {
+                    Assassin[] members = team.getMembers();
+                    for (int j = 0; j < members.length; j++)
+                    {
+                        System.out.println("Removing " + members[j].getName());
+                        Management.playerList.remove(members[j]);
+                        Management.alivePlayers.remove(members[j]);
+                    }
+                    System.out.println("Removing " + team.getName());
+                    Management.teamList.remove(team);
+                    Management.aliveTeams.remove(team);
+                    System.out.println("Team and Players successfully deleted.");
+                }
+            }
+        }
+    }
+
+    public static void editTeam() {
+        menuChoice = 0;
+        while (true) {
+            System.out.println("Enter the name of the team you want to edit - or the name of a member:");
+            String input = scanner.nextLine();
+            Team selectedTeam = null;
+
+            BreakPoint:
+            for(Team team: Management.teamList)
+            {
+                if (team.getName().equalsIgnoreCase(input))
+                {
+                    selectedTeam = team;
+                    break;
+                }
+                else
+                {
+                    for (Assassin player : team.getMembers())
+                    {
+                        if (player.getName().equalsIgnoreCase(input))
+                        {
+                            selectedTeam = team;
+                            break BreakPoint;
+                        }
+                    }
+                }
+            }
+
+            if (selectedTeam == null)
+            {
+                System.out.println("No team or players with that name.");
+                menu();
+                break;
+            }
+
+            System.out.println("Editing " + selectedTeam.getName());
+            System.out.println("(1) Toggle Immune (Current:" + selectedTeam.getImmune() + ")");
+            System.out.println("(2) Change Name");
+            System.out.println("(3) Back");
+
+            menuChoice = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (menuChoice) {
+                case 1:
+                    selectedTeam.setImmune(!selectedTeam.getImmune());
+                    System.out.println("Team Immune? " + selectedTeam.getImmune());
+                    menu();
+                    break;
+                case 2:
+                    System.out.println("Enter the new name:");
+                    input = scanner.nextLine();
+                    selectedTeam.setName(input);
+                    menu();
+                    break;
+                case 3:
+                    menu();
+                    break;
+            }
+        }
+    }
+
+    public static void playerManager() {
+        menuChoice = 0;
+        while (true) {
+            System.out.println("(1) Log Kill");
+            System.out.println("(2) Revive Player");
+            System.out.println("(3) Manual Elimination");
+            System.out.println("(4) Check Alive");
+            System.out.println("(5) Back");
+
+            menuChoice = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (menuChoice) {
+                case 1:
+                    logKill();
+                    break;
+                case 2:
+                    revivePlayer();
+                    break;
+                case 3:
+                    manualElimination();
+                    break;
+                case 4:
+                    checkAlive();
+                    break;
+                case 5:
+                    menu();
+                    break;
+            }
+        }
+    }
+
+    public static void checkAlive()
+    {
+        System.out.println("Enter the player name:");
+        String input = scanner.nextLine();
+
+        for (Assassin player : Management.playerList)
+        {
+            if (player.getName().equalsIgnoreCase(input))
+            {
+                System.out.println(player.isAlive());
+                return;
+            }
+        }
+        System.out.println("No player found with that name");
+    }
     public static void logKill() {
         Assassin killer = null;
         Assassin target = null;
 
         System.out.println("Enter the killer's name: ");
         String killerName = scanner.nextLine();
-
+        if (killerName.isEmpty())
+        {
+            menu();
+        }
         boolean success = false;
         for (int i = 0; i < Management.alivePlayers.size(); i++) {
-            if (Management.alivePlayers.get(i).getName().contains(killerName)) {
+            if (Management.alivePlayers.get(i).getName().toLowerCase().contains(killerName.toLowerCase())) {
                 killer = Management.alivePlayers.get(i);
                 success = true;
             }
@@ -220,7 +398,7 @@ public class UserInterface {
 
         success = false;
         for (int i = 0; i < Management.alivePlayers.size(); i++) {
-            if (Management.alivePlayers.get(i).getName().contains(targetName)) {
+            if (Management.alivePlayers.get(i).getName().toLowerCase().contains(targetName.toLowerCase())) {
                 target = Management.alivePlayers.get(i);
                 success = true;
             }
@@ -231,12 +409,66 @@ public class UserInterface {
             menu();
         }
 
-        killer.kill(target);
+
+        success = false;
+        for(Assassin player: killer.getTeam().getTarget().getMembers())
+        {
+            if (player.equals(target)) {
+                success = true;
+                break;
+            }
+        }
+
+        if (success)
+        {
+            String message = "Player " + target.getName() + " has been eliminated by " + killer.getName();
+            LogHandler.addLog(message);
+            killer.kill(target);
+        }
+        else
+        {
+            System.out.println("Stated target is not on the target team of the killer");
+        }
+    }
+
+    public static void revivePlayer()
+    {
+        System.out.println("Enter the player name:");
+        String input = scanner.nextLine();
+
+        for (Assassin player : Management.playerList)
+        {
+            if (player.getName().equalsIgnoreCase(input))
+            {
+                player.revive();
+                return;
+            }
+        }
+        System.out.println("No player found with that name");
+    }
+
+    public static void manualElimination()
+    {
+        System.out.println("Enter the player name:");
+        String input = scanner.nextLine();
+
+        for (Assassin player : Management.playerList)
+        {
+            if (player.getName().equalsIgnoreCase(input))
+            {
+                player.eliminate();
+                System.out.println(player.getName() + " has been eliminated");
+                LogHandler.addLog("The above elimination was manually done.");
+                return;
+            }
+        }
+
+        System.out.println("No player found with that name");
     }
 
     public static void printLists()
     {
-        currentInput = 0;
+        menuChoice = 0;
         while (true) {
             System.out.println("(1) All Teams");
             System.out.println("(2) Alive Teams");
@@ -244,10 +476,10 @@ public class UserInterface {
             System.out.println("(4) Target List");
             System.out.println("(5) Back");
 
-            currentInput = scanner.nextInt();
+            menuChoice = scanner.nextInt();
             scanner.nextLine();
 
-            switch (currentInput) {
+            switch (menuChoice) {
                 case 1:
                     printAllTeams();
                     break;
@@ -298,8 +530,26 @@ public class UserInterface {
                 Team team = Management.aliveTeams.get(i);
                 System.out.print("Team: " + team.getName());
                 System.out.println("(" + team.getMembers()[0].getName() + ", " + team.getMembers()[1].getName() + ")");
-                System.out.print("Target: " + team.getTarget().getName());
-                System.out.println("(" + team.getTarget().getMembers()[0].getName() + ", " + team.getTarget().getMembers()[1].getName() + ")\n");
+                System.out.println("Targets: " + team.getTarget().getName());
+                Assassin player1 = team.getTarget().getMembers()[0];
+                Assassin player2 = team.getTarget().getMembers()[1];
+                if (player1.isAlive())
+                {
+                    System.out.println(player1.getName() + "(Alive)");
+                }
+                else
+                {
+                    System.out.println(player1.getName() + "(Dead)");
+                }
+                if (player2.isAlive())
+                {
+                    System.out.println(player2.getName() + "(Alive)");
+                }
+                else
+                {
+                    System.out.println(player2.getName() + "(Dead)");
+                }
+                System.out.println();
             }
             catch (NullPointerException e)
             {
@@ -310,16 +560,16 @@ public class UserInterface {
 
     public static void roundControl()
     {
-        currentInput = 0;
+        menuChoice = 0;
         while (true) {
             System.out.println("(1) Start Game");
             System.out.println("(2) Next Round");
             System.out.println("(3) Back");
 
-            currentInput = scanner.nextInt();
+            menuChoice = scanner.nextInt();
             scanner.nextLine();
 
-            switch (currentInput) {
+            switch (menuChoice) {
                 case 1:
                     Management.startGame();
                     menu();
