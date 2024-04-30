@@ -51,6 +51,13 @@ public class Management
             while (true)
             {
                 int random = (int) (Math.random() * (unassigned.size()));
+                if (unassigned.get(random).getTarget() != null)
+                {
+                    if (unassigned.get(random).getTarget().equals(noTarget.get(i)))
+                    {
+                        break;
+                    }
+                }
                 if (unassigned.get(random) != noTarget.get(i))
                 {
                     noTarget.get(i).setTarget(unassigned.get(random));

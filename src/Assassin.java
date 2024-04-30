@@ -126,7 +126,7 @@ public class Assassin implements Serializable
             target.team.eliminate();
 
             Management.assignFromKill(this, target);
-            System.out.println("This kill fully eliminated team " + target.team.getName() + ". \nThis team's new target is: " + this.team.getTargetName());
+            System.out.println("This kill fully eliminated team " + target.team.getName() + ". \nThis team's new target is: " + this.team.getTarget());
 
         }
         else
